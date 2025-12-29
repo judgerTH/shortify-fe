@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  readworld-fe:
+    container_name: readworld-fe
+    image: readworld-fe:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:5000:80"
+    restart: always
