@@ -1,13 +1,450 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>shortify-fe</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shortify</title>
+
+<style>
+:root{
+  --bg:#0b1220;
+  --card:#0f1a2e;
+  --border:rgba(255,255,255,.08);
+  --text:rgba(255,255,255,.95);
+  --muted:rgba(255,255,255,.6);
+  --accent:#ff5f5f;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
+}
+
+.wrap{
+  max-width:420px;
+  margin:0 auto;
+  padding:14px;
+}
+
+/* 헤더 */
+header{
+  position:sticky;
+  top:0;
+  background:rgba(11,18,32,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  z-index:10;
+}
+
+.header-inner{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.brand{
+  font-weight:700;
+  font-size:15px;
+  flex:1;
+}
+
+select{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:6px 8px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+/* 카드 공통 */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+}
+
+/* 사회 날씨 */
+.mood{
+  background:linear-gradient(135deg,#ff5f5f,#b83232);
+  color:#fff;
+}
+
+.mood h2{
+  margin:0;
+  font-size:20px;
+}
+
+.mood .date{
+  font-size:13px;
+  opacity:.85;
+  margin-top:4px;
+}
+
+.score{
+  margin-top:16px;
+}
+
+.score-item{
+  margin-bottom:12px;
+}
+
+.score-label{
+  font-size:13px;
+  margin-bottom:4px;
+}
+
+.bar{
+  height:8px;
+  background:rgba(255,255,255,.25);
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.bar span{
+  display:block;
+  height:100%;
+  background:#fff;
+}
+
+/* 분석 */
+.analysis{
+  margin-top:14px;
+}
+
+.analysis h3{
+  margin:0 0 8px;
+  font-size:16px;
+}
+
+.analysis p{
+  margin:0;
+  font-size:14px;
+  line-height:1.6;
+  color:var(--muted);
+}
+
+/* 시간대 */
+.time-group{
+  margin-top:24px;
+}
+
+.time-title{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+/* 뉴스 카드 */
+.news-card{
+  padding:14px 0;
+}
+
+.press{
+  font-size:13px;
+  color:#7db3ff;
+  margin-bottom:4px;
+}
+
+.title{
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+/* 본문 (요약 + 상세 통합) */
+.content{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.5;
+
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+
+  transition:all .2s ease;
+}
+
+.news-card.open .content{
+  -webkit-line-clamp:unset;
+}
+
+/* 액션 */
+.actions{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.05);
+  font-size:13px;
+  color:var(--muted);
+}
+
+.action{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  cursor:pointer;
+}
+
+.toggle{
+  margin-left:auto;
+  font-size:16px;
+  padding:6px;
+}
+
+/* 댓글 */
+.comments{
+  margin-top:14px;
+}
+
+.comments strong{
+  font-size:13px;
+}
+
+.comment{
+  font-size:13px;
+  margin:6px 0;
+  color:var(--muted);
+}
+
+.comment-form{
+  display:flex;
+  gap:6px;
+  margin-top:8px;
+}
+
+.comment-form input{
+  flex:1;
+  padding:6px 8px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  font-size:13px;
+}
+
+.comment-form button{
+  padding:6px 10px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  font-size:13px;
+}
+
+footer{
+  margin:24px 0 10px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="brand">Shortify</div>
+    <select>
+      <option>최근 2시간</option>
+      <option>최근 4시간</option>
+      <option>오늘</option>
+    </select>
+    <select>
+      <option>전체 언론사</option>
+      <option>연합뉴스</option>
+      <option>뉴스1</option>
+      <option>중앙일보</option>
+      <option>조선비즈</option>
+    </select>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="card mood">
+    <h2>2025-12-24</h2>
+    <div class="date">오늘의 사회 분위기 지수</div>
+
+    <div class="score">
+      <div class="score-item">
+        <div class="score-label">긴장도 · 90</div>
+        <div class="bar"><span style="width:90%"></span></div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">긍정도 · 25</div>
+        <div class="bar"><span style="width:25%"></span></div>
+      </div>
+      <div class="score-item">
+        <div class="score-label">안정도 · 15</div>
+        <div class="bar"><span style="width:15%"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card analysis">
+    <h3>오늘의 사회 분위기 분석</h3>
+    <p>
+      정치권 사법 이슈와 환율 급등에 따른 정부 대응이 동시에 보도되며
+      전반적으로 긴장도는 높고 안정성은 낮은 흐름이 이어지고 있다.
+    </p>
+  </section>
+
+  <section class="time-group">
+    <div class="time-title">02:00 – 02:59</div>
+
+    <div class="card">
+      <div class="news-card">
+        <div class="press">뉴스1</div>
+        <div class="title">달러 유입 빗장 푼다…외환 규제 완화</div>
+
+        <div class="content">
+          정부는 최근 환율 급등의 원인을 구조적인 외화 수급 불균형으로 판단하고,
+          외국계 은행 선물환 포지션 한도 확대 등 외환건전성 제도 조정을 발표했다.
+          이에 따라 은행권 달러 공급 여력이 확대되고 수출기업의 외화 조달 부담이
+          완화될 것으로 기대된다는 평가가 나온다.
+        </div>
+
+        <div class="actions">
+          <div class="action">❤️ 12</div>
+          <div class="action">🔗 공유</div>
+          <div class="action">💬 3</div>
+          <div class="action toggle" onclick="toggleDetail(this)">⌄</div>
+        </div>
+
+        <div class="comments">
+          <strong>댓글</strong>
+          <div class="comment">익명: 환율 진짜 심각하다</div>
+          <div class="comment">익명: 단기 처방 같음</div>
+
+          <div class="comment-form">
+            <input placeholder="익명으로 댓글 작성">
+            <button>등록</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="card">
+      <div class="news-card">
+        <div class="press">뉴스1</div>
+        <div class="title">달러 유입 빗장 푼다…외환 규제 완화</div>
+
+        <div class="content">
+          정부는 최근 환율 급등의 원인을 구조적인 외화 수급 불균형으로 판단하고,
+          외국계 은행 선물환 포지션 한도 확대 등 외환건전성 제도 조정을 발표했다.
+          이에 따라 은행권 달러 공급 여력이 확대되고 수출기업의 외화 조달 부담이
+          완화될 것으로 기대된다는 평가가 나온다.
+        </div>
+
+        <div class="actions">
+          <div class="action">❤️ 12</div>
+          <div class="action">🔗 공유</div>
+          <div class="action">💬 3</div>
+          <div class="action toggle" onclick="toggleDetail(this)">⌄</div>
+        </div>
+
+        <div class="comments">
+          <strong>댓글</strong>
+          <div class="comment">익명: 환율 진짜 심각하다</div>
+          <div class="comment">익명: 단기 처방 같음</div>
+
+          <div class="comment-form">
+            <input placeholder="익명으로 댓글 작성">
+            <button>등록</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="time-group">
+    <div class="time-title">01:00 – 01:59</div>
+
+    <div class="card">
+      <div class="news-card">
+        <div class="press">뉴스1</div>
+        <div class="title">달러 유입 빗장 푼다…외환 규제 완화</div>
+
+        <div class="content">
+          정부는 최근 환율 급등의 원인을 구조적인 외화 수급 불균형으로 판단하고,
+          외국계 은행 선물환 포지션 한도 확대 등 외환건전성 제도 조정을 발표했다.
+          이에 따라 은행권 달러 공급 여력이 확대되고 수출기업의 외화 조달 부담이
+          완화될 것으로 기대된다는 평가가 나온다.
+        </div>
+
+        <div class="actions">
+          <div class="action">❤️ 12</div>
+          <div class="action">🔗 공유</div>
+          <div class="action">💬 3</div>
+          <div class="action toggle" onclick="toggleDetail(this)">⌄</div>
+        </div>
+
+        <div class="comments">
+          <strong>댓글</strong>
+          <div class="comment">익명: 환율 진짜 심각하다</div>
+          <div class="comment">익명: 단기 처방 같음</div>
+
+          <div class="comment-form">
+            <input placeholder="익명으로 댓글 작성">
+            <button>등록</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="card">
+      <div class="news-card">
+        <div class="press">뉴스1</div>
+        <div class="title">달러 유입 빗장 푼다…외환 규제 완화</div>
+
+        <div class="content">
+          정부는 최근 환율 급등의 원인을 구조적인 외화 수급 불균형으로 판단하고,
+          외국계 은행 선물환 포지션 한도 확대 등 외환건전성 제도 조정을 발표했다.
+          이에 따라 은행권 달러 공급 여력이 확대되고 수출기업의 외화 조달 부담이
+          완화될 것으로 기대된다는 평가가 나온다.
+        </div>
+
+        <div class="actions">
+          <div class="action">❤️ 12</div>
+          <div class="action">🔗 공유</div>
+          <div class="action">💬 3</div>
+          <div class="action toggle" onclick="toggleDetail(this)">⌄</div>
+        </div>
+
+        <div class="comments">
+          <strong>댓글</strong>
+          <div class="comment">익명: 환율 진짜 심각하다</div>
+          <div class="comment">익명: 단기 처방 같음</div>
+
+          <div class="comment-form">
+            <input placeholder="익명으로 댓글 작성">
+            <button>등록</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    실시간 수집된 기사 원문을 기반으로 요약된 정보입니다.
+  </footer>
+
+</main>
+
+<script>
+function toggleDetail(el){
+  const card = el.closest('.news-card');
+  const open = card.classList.toggle('open');
+  el.textContent = open ? '⌃' : '⌄';
+}
+</script>
+
+</body>
 </html>
