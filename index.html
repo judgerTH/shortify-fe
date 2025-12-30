@@ -6,6 +6,14 @@
 <title>Shortify</title>
 
 <style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html{
+  scrollbar-gutter: stable;
+}
+
 :root{
   --bg:#0b1220;
   --card:#0f1a2e;
@@ -22,6 +30,7 @@ body{
   background:var(--bg);
   color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
+  overflow-x: hidden;
 }
 
 .wrap{
@@ -262,6 +271,76 @@ select{
   color:var(--text);
 }
 
+/* ===== 지표 설명 ===== */
+.mood-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.info-btn{
+  font-size:14px;
+  cursor:pointer;
+  opacity:.9;
+}
+
+.mood-summary{
+  margin-top:10px;
+  font-size:13px;
+  opacity:.9;
+}
+
+.level{
+  font-size:12px;
+  opacity:.85;
+  margin-left:4px;
+}
+
+.level.high{ color:#ffe1e1; }
+.level.mid{ color:#fff3c4; }
+.level.low{ color:#e1ffef; }
+
+/* ===== 지표 설명 카드 (개선 버전) ===== */
+.mood-info{
+  max-height:0;
+  overflow:hidden;
+  margin-top:12px;
+  background:rgba(0,0,0,.18);
+  border-radius:12px;
+  padding:0 12px;
+  font-size:13px;
+  line-height:1.6;
+  transition:max-height .3s ease, padding .3s ease;
+}
+
+.mood-info.open{
+  max-height:600px; /* 충분히 큰 값 */
+  padding:12px;
+}
+
+.delta{
+  font-size:11px;
+  margin-left:6px;
+  opacity:.9;
+}
+
+.delta.up{
+  color:#ffdddd;
+}
+
+.delta.down{
+  color:#d4ffe6;
+}
+
+.delta.flat{
+  color:rgba(255,255,255,.6);
+}
+
+.mood-info strong{
+  color:#fff;
+}
+
+
 footer{
   margin:24px 0 10px;
   font-size:12px;
@@ -290,22 +369,63 @@ footer{
 <main class="wrap">
 
   <section class="card mood-full">
+
+  <div class="mood-header">
     <h2>2025-12-24</h2>
-    <div class="score">
-      <div class="score-item">
-        <div class="score-label">긴장도 · 90</div>
-        <div class="bar"><span style="width:90%"></span></div>
+    <div class="info-btn" onclick="toggleMoodInfo()">ⓘ</div>
+  </div>
+
+  <div class="score">
+    <div class="score-item">
+      <div class="score-label">
+        긴장도 · 90
+        <span class="level high">매우 높음</span>
+        <span class="delta up">▲ 어제보다 +12</span>
       </div>
-      <div class="score-item">
-        <div class="score-label">긍정도 · 25</div>
-        <div class="bar"><span style="width:25%"></span></div>
-      </div>
-      <div class="score-item">
-        <div class="score-label">안정도 · 15</div>
-        <div class="bar"><span style="width:15%"></span></div>
-      </div>
+      <div class="bar"><span style="width:90%"></span></div>
     </div>
-  </section>
+
+    <div class="score-item">
+      <div class="score-label">
+        긍정도 · 25 <span class="level mid">낮음</span>
+      </div>
+      <div class="bar"><span style="width:25%"></span></div>
+    </div>
+
+    <div class="score-item">
+      <div class="score-label">
+        안정도 · 15 <span class="level low">매우 낮음</span>
+      </div>
+      <div class="bar"><span style="width:15%"></span></div>
+    </div>
+  </div>
+
+  <div class="mood-summary">
+    현재 사회 분위기는 <strong>정치·환율 이슈 중심의 높은 긴장 국면</strong>입니다.
+  </div>
+
+  <!-- 지표 설명 -->
+  <div class="mood-info" id="moodInfo">
+    <strong>사회 분위기 지표란?</strong><br><br>
+
+    최근 2시간 동안 수집된 뉴스 제목과 요약을 AI가 분석해  
+    사회 전반의 흐름을 수치로 표현한 참고 지표입니다.<br><br>
+
+    <strong>· 긴장도</strong><br>
+    정치·사법·외교·안보 등 갈등성 이슈가 많을수록 높아집니다.<br><br>
+
+    <strong>· 긍정도</strong><br>
+    성과, 개선, 회복, 안정 관련 보도가 많을수록 높아집니다.<br><br>
+
+    <strong>· 안정도</strong><br>
+    사건·위기 보도보다 일상·정책·중립 기사 비중이 높을수록 올라갑니다.<br><br>
+
+    ※ 특정 사실이나 여론을 단정하지 않으며  
+    뉴스 흐름을 이해하기 위한 참고용 지표입니다.
+  </div>
+
+</section>
+
 
   <section class="card mood-mini">
     <strong>긴장 90</strong>
@@ -372,6 +492,13 @@ function shareArticle(){
   }
 }
 </script>
+<script>
+function toggleMoodInfo(){
+  const info = document.getElementById('moodInfo');
+  info.classList.toggle('open');
+}
+</script>
+
 
 </body>
 </html>
