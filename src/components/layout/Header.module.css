@@ -1,0 +1,87 @@
+.header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05); /* Softer border */
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03); /* Subtle shadow for depth */
+}
+
+.inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+.brand {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #111;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+}
+
+.select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #f3f4f6;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.select:hover {
+    background: #e5e7eb;
+    color: #111;
+}
+
+.select:focus {
+    border-color: #e5e7eb;
+    background: #fff;
+}
+
+/* On Air Section - brought back and styled nicely */
+.onair {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    font-size: 11px;
+    padding: 8px 0;
+    background: #fff;
+    border-top: 1px solid #f0f0f0;
+    color: #999;
+    letter-spacing: -0.2px;
+}
+
+.onair span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.active {
+    color: var(--accent); /* Uses the blue accent */
+    font-weight: 700;
+    color: #2563eb;
+}
+
+/* Pulse animation for the active dot */
+.active::before {
+    content: '';
+    /* The dot is text char, but let's add glow or something? 
+       Actually user used text dot ●. I'll just animate color or opacity.
+    */
+    display: none; 
+}

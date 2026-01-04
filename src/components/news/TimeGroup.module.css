@@ -1,0 +1,33 @@
+.group {
+    margin-top: 40px;
+    position: relative;
+    /* Center align the title wrapper if needed, but flex/text-align usually handled outside or via children */
+}
+
+/* Line behind the time badge */
+.group::before {
+    content: '';
+    position: absolute;
+    top: 16px; /* Adjust to align with center of badge */
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e5e7eb; /* Slightly darker line */
+    z-index: 0;
+}
+
+.title {
+    position: relative;
+    display: inline-block;
+    background: #111; /* Dark background for high contrast */
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+    z-index: 1;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 2px solid #fff; /* White border to separate from line */
+}
