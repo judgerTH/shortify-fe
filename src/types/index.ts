@@ -3,7 +3,7 @@ export interface MoodScore {
   value: number; // 0-100
   delta?: number;
   level?: string;
-  levelType?: 'high' | 'mid' | 'low';
+  levelType?: "high" | "mid" | "low";
 }
 
 export interface DayMood {
@@ -11,11 +11,6 @@ export interface DayMood {
   scores: MoodScore[];
   summary?: string;
   analysis?: string; // Content from AnalysisCard
-}
-
-export interface SocialAnalysis {
-  title: string;
-  content: string;
 }
 
 export interface Comment {

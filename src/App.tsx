@@ -2,11 +2,11 @@ import { Layout } from "./components/layout/Layout";
 import { MoodCard } from "./components/mood/MoodCard";
 import { TimeGroup } from "./components/news/TimeGroup";
 import { NewsCard } from "./components/news/NewsCard";
-import type { DayMood, SocialAnalysis, NewsItem } from "./types";
+import type { DayMood, NewsItem } from "./types";
 
 function App() {
-  const today = new Date().toISOString().split('T')[0];
-  
+  const today = new Date().toISOString().split("T")[0];
+
   const moodData: DayMood = {
     date: today,
     summary: "현재 사회 분위기는 정치·환율 이슈 중심의 높은 긴장 국면입니다.",
@@ -20,7 +20,13 @@ function App() {
         level: "매우 높음",
         levelType: "high",
       },
-      { label: "긍정도", value: 25, delta: -8,level: "낮음", levelType: "mid" },
+      {
+        label: "긍정도",
+        value: 25,
+        delta: -8,
+        level: "낮음",
+        levelType: "mid",
+      },
       { label: "안정도", value: 15, level: "매우 낮음", levelType: "low" },
     ],
   };
