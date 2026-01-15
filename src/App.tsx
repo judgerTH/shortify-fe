@@ -3,9 +3,28 @@ import { MoodCard } from "./components/mood/MoodCard";
 import { TimeGroup } from "./components/news/TimeGroup";
 import { NewsCard } from "./components/news/NewsCard";
 import type { DayMood, NewsItem } from "./types";
+import { DailyTimelineAPI } from "./api/domain/daily/API";
 
 function App() {
   const today = new Date().toISOString().split("T")[0];
+
+  // ===== 버튼 클릭 시 API 요청만 전송 =====
+  const handleApiTest = async () => {
+    const res = await DailyTimelineAPI.getTimeline({
+      page: 0,
+      size: 100,
+    });
+
+    if (!res.result) {
+      console.error("API 실패", res.reason);
+      return;
+    }
+
+    console.log("API 성공", res.data);
+  };
+  // =====================================
+
+
 
   const moodData: DayMood = {
     date: today,
@@ -51,6 +70,14 @@ function App() {
     <Layout>
       <MoodCard data={moodData} />
 
+      {/* API 테스트용 버튼 */}
+      <div style={{ padding: "16px" }}>
+        <button onClick={handleApiTest}>
+          타임라인 API 호출
+        </button>
+      </div>
+      {/* API 테스트용 버튼 */}
+      
       <TimeGroup time="02:00 – 02:59">
         <NewsCard data={newsItems[0]} />
         <br />
