@@ -1,6 +1,5 @@
 import { CommonAPI } from "../../common/CommonAPI";
 import type { API_RESPONSE } from "../../common/API_RESPONSE";
-import type { DailyTimelineReq } from "./dto/req/DailyTimelineReq";
 import type { DailyTimelineRes } from "./dto/res/DailyTimelineRes";
 
 class DailyAPI extends CommonAPI {
@@ -19,18 +18,12 @@ class DailyAPI extends CommonAPI {
 
     /**
      * 초기 타임라인 조회
-     * - 최신 요약 기사 기준
-     * - 인피니티 스크롤 대응
+     * - 현재 시점 기준
+     * - 최신 기사 100건
+     * - 파라미터 없음
      */
-    getTimeline(
-        req?: DailyTimelineReq
-    ): Promise<API_RESPONSE<DailyTimelineRes>> {
-        return this.get<DailyTimelineRes>("/timeline", {
-            params: {
-                page: req?.page ?? 0,
-                size: req?.size ?? 100,
-            },
-        });
+    getInitTimeline(): Promise<API_RESPONSE<DailyTimelineRes>> {
+        return this.get<DailyTimelineRes>("/timeline/init");
     }
 }
 

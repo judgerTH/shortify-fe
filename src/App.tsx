@@ -10,19 +10,17 @@ function App() {
 
   // ===== 버튼 클릭 시 API 요청만 전송 =====
   const handleApiTest = async () => {
-    const res = await DailyTimelineAPI.getTimeline({
-      page: 0,
-      size: 100,
-    });
+      const res = await DailyTimelineAPI.getInitTimeline();
 
-    if (!res.result) {
-      console.error("API 실패", res.reason);
-      return;
-    }
+      if (!res.result) {
+          console.error("API 실패", res.reason);
+          return;
+      }
 
-    console.log("API 성공", res.data);
+      console.log("API 성공", res.data);
   };
   // =====================================
+
 
 
 
