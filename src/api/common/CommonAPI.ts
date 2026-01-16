@@ -6,15 +6,11 @@ export abstract class CommonAPI {
     protected axiosInstance: AxiosInstance;
 
     protected constructor(basePath: string) {
-        // 환경 변수에서 베이스 URL 가져옴
-        const baseURL = import.meta.env.VITE_API_BASE_URL;
-
         this.axiosInstance = axios.create({
-            baseURL: `${baseURL}${basePath}`,
+            baseURL: basePath,
             timeout: 10000,
         });
     }
-
 
     /* ========================
         Response Normalize
