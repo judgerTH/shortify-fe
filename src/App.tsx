@@ -1,28 +1,37 @@
+import { useState, useEffect } from "react";
 import { Layout } from "./components/layout/Layout";
 import { MoodCard } from "./components/mood/MoodCard";
 import { TimeGroup } from "./components/news/TimeGroup";
 import { NewsCard } from "./components/news/NewsCard";
 import type { DayMood, NewsItem } from "./types";
 import { DailyTimelineAPI } from "./api/domain/daily/API";
+import type { DailyTimelineRes } from "./api/domain/daily/dto/res/DailyTimelineRes";
 
 function App() {
   const today = new Date().toISOString().split("T")[0];
 
-  // ===== 버튼 클릭 시 API 요청만 전송 =====
-  const handleApiTest = async () => {
+  const [timelineData, setTimelineData] = useState<DailyTimelineRes | null>(
+    null
+  );
+
+  // 컴포넌트 마운트 시 자동 실행
+  useEffect(() => {
+    const fetchTimeline = async () => {
       const res = await DailyTimelineAPI.getInitTimeline();
 
       if (!res.result) {
-          console.error("API 실패", res.reason);
-          return;
+        console.error("API 실패", res.reason);
+        return;
       }
 
       console.log("API 성공", res.data);
-  };
-  // =====================================
+      if (res.data) {
+        setTimelineData(res.data);
+      }
+    };
 
-
-
+    fetchTimeline();
+  }, []);
 
   const moodData: DayMood = {
     date: today,
@@ -48,45 +57,36 @@ function App() {
     ],
   };
 
-  const newsItems: NewsItem[] = Array(3)
-    .fill({
-      id: "1",
-      press: "뉴스1",
-      title: "달러 유입 빗장 푼다…외환 규제 완화",
-      summary:
-        "정부는 최근 환율 급등의 원인을 구조적인 외화 수급 불균형으로 판단하고, 외국계 은행 선물환 포지션 한도 확대 등 외환건전성 제도 조정을 발표했다. 이에 따라 은행권 달러 공급 여력이 확대되고 수출기업의 외화 조달 부담이 완화될 것으로 기대된다는 평가가 나온다.",
-      likes: 12,
-      time: "02:00",
-      comments: [
-        { id: "c1", author: "익명", content: "환율 진짜 심각하다" },
-        { id: "c2", author: "익명", content: "단기 처방 같음" },
-      ],
-    })
-    .map((item, i) => ({ ...item, id: `news-${i}` }));
-
   return (
     <Layout>
       <MoodCard data={moodData} />
 
-      {/* API 테스트용 버튼 */}
-      <div style={{ padding: "16px" }}>
-        <button onClick={handleApiTest}>
-          타임라인 API 호출
-        </button>
-      </div>
-      {/* API 테스트용 버튼 */}
-      
-      <TimeGroup time="02:00 – 02:59">
-        <NewsCard data={newsItems[0]} />
-        <br />
-        <NewsCard data={newsItems[1]} />
-      </TimeGroup>
-
-      <TimeGroup time="01:00 – 01:59">
-        <NewsCard data={newsItems[2]} />
-        <br />
-        <NewsCard data={newsItems[0]} />
-      </TimeGroup>
+      {timelineData && Array.isArray(timelineData.groups) ? (
+        timelineData.groups.map((group, groupIndex) => (
+          <TimeGroup key={groupIndex} time={group.timeRange}>
+            {group.articles.map((article) => (
+              <div key={article.id} style={{ marginBottom: "16px" }}>
+                <NewsCard
+                  data={{
+                    id: String(article.id),
+                    media: article.media,
+                    title: article.title,
+                    summary: article.summary,
+                    likes: article.likes,
+                    time: article.publishedAt.substring(11, 16), // "00:00"
+                    comments: [], //아직없음
+                    originalUrl: article.originalUrl,
+                  }}
+                />
+              </div>
+            ))}
+          </TimeGroup>
+        ))
+      ) : (
+        <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+          {timelineData ? "표시할 뉴스가 없습니다." : "데이터 로딩 중..."}
+        </div>
+      )}
     </Layout>
   );
 }

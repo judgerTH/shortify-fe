@@ -21,10 +21,11 @@ export interface Comment {
 
 export interface NewsItem {
   id: string;
-  press: string;
+  media: string;
   title: string;
   summary: string;
   likes: number;
   comments: Comment[];
   time: string; // HH:mm
+  originalUrl?: string;
 }
