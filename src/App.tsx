@@ -3,7 +3,7 @@ import { Layout } from "./components/layout/Layout";
 import { MoodCard } from "./components/mood/MoodCard";
 import { TimeGroup } from "./components/news/TimeGroup";
 import { NewsCard } from "./components/news/NewsCard";
-import type { DayMood, NewsItem } from "./types";
+import type { DayMood } from "./types";
 import { DailyTimelineAPI } from "./api/domain/daily/API";
 import type { DailyTimelineRes } from "./api/domain/daily/dto/res/DailyTimelineRes";
 
