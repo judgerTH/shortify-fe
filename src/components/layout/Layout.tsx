@@ -1,15 +1,15 @@
 import type { ReactNode } from "react";
-import { Header } from "./Header";
 import { Footer } from "./Footer";
 
 interface LayoutProps {
+  header: ReactNode;
   children: ReactNode;
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ header, children }: LayoutProps) => {
   return (
     <>
-      <Header />
+      {header}
       <main className="wrap">{children}</main>
       <Footer />
     </>

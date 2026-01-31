@@ -1,22 +1,41 @@
 import styles from './Header.module.css';
+import { MEDIA_LIST } from '../../constants/media';
+import type { TimeFilterType } from '../../types/filter';
 
-export const Header = () => {
+interface HeaderProps {
+  onTimeFilterChange: (timeFilter: TimeFilterType) => void;
+  onMediaFilterChange: (mediaName: string | null) => void;
+}
+
+export const Header = ({ onTimeFilterChange, onMediaFilterChange }: HeaderProps) => {
+  const handleTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value as TimeFilterType;
+    onTimeFilterChange(value);
+  };
+
+  const handleMediaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    onMediaFilterChange(value === 'all' ? null : value);
+  };
+
   return (
     <header className={styles.header}>
       <div className={`wrap ${styles.inner}`}>
         <div className={styles.brand}>세상읽기.</div>
         <div className={styles.controls}>
-            <select className={styles.select}>
-                <option>최근 2시간</option>
-                <option>최근 4시간</option>
-                <option>오늘</option>
+            <select className={styles.select} onChange={handleTimeChange} defaultValue="recent-8h">
+                <option value="today">오늘</option>
+                <option value="recent-2h">최근 2시간</option>
+                <option value="recent-4h">최근 4시간</option>
+                <option value="recent-8h">최근 8시간</option>
             </select>
-            <select className={styles.select}>
-                <option>전체 언론사</option>
-                <option>연합뉴스</option>
-                <option>뉴스1</option>
-                <option>중앙일보</option>
-                <option>조선비즈</option>
+            <select className={styles.select} onChange={handleMediaChange} defaultValue="all">
+                <option value="all">전체 언론사</option>
+                {MEDIA_LIST.map((media) => (
+                  <option key={media.code} value={media.name}>
+                    {media.name}
+                  </option>
+                ))}
             </select>
         </div>
       </div>

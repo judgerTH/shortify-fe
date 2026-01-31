@@ -36,7 +36,14 @@ export const NewsCard = ({ data }: NewsCardProps) => {
     return (
         <div className={`${styles.card} ${isOpen ? styles.open : ''}`}>
             <div className={styles.header}>
-                <div className={styles.media}>{data.media}</div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <div className={styles.media}>{data.media}</div>
+                    {data.publishedAt && (
+                        <div className={styles.date}>
+                            {data.publishedAt.replace('T', ' ').substring(0, 16)}
+                        </div>
+                    )}
+                </div>
                 {data.originalUrl && (
                     <a 
                         href={data.originalUrl} 

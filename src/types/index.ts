@@ -27,5 +27,6 @@ export interface NewsItem {
   likes: number;
   comments: Comment[];
   time: string; // HH:mm
+  publishedAt?: string;
   originalUrl?: string;
 }
