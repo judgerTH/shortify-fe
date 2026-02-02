@@ -18,7 +18,7 @@ export const useTimelineStatus = (fetchTimeline: () => void) => {
   const [uiStatus, setUiStatus] = useState<UiStatusType>(UI_STATE.IDLE);
 
   // 타이머 참조 변수
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<number | null>(null);
 
   // 초기 한번만 실행되도록
   useEffect(() => {
