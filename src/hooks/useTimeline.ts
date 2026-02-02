@@ -36,11 +36,16 @@ export const useTimeline = () => {
     setFilter((prev) => ({ ...prev, mediaName }));
   };
 
+  const refresh = () => {
+    setFilter((prev) => ({ ...prev }));
+  };
+
   return {
     timelineData: data,
     isLoading,
     filter,
     onTimeFilterChange: handleTimeFilterChange,
-    onMediaFilterChange: handleMediaFilterChange
+    onMediaFilterChange: handleMediaFilterChange,
+    refresh
   };
 };

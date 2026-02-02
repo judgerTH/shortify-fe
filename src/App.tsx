@@ -3,6 +3,7 @@ import { Header } from "./components/layout/Header";
 import { MoodCard } from "./components/mood/MoodCard";
 import { TimelineList } from "./components/news/TimelineList";
 import { useTimeline } from "./hooks/useTimeline";
+import { useTimelineStatus } from "./hooks/useTimelineStatus";
 import { MOCK_MOOD_DATA } from "./mocks/mood";
 
 function App() {
@@ -10,8 +11,11 @@ function App() {
     timelineData, 
     isLoading, 
     onTimeFilterChange, 
-    onMediaFilterChange 
+    onMediaFilterChange,
+    refresh
   } = useTimeline();
+
+  const uiStatus = useTimelineStatus(refresh);
 
   return (
     <Layout 
@@ -19,6 +23,7 @@ function App() {
         <Header 
           onTimeFilterChange={onTimeFilterChange}
           onMediaFilterChange={onMediaFilterChange}
+          uiStatus={uiStatus}
         />
       }
     >
