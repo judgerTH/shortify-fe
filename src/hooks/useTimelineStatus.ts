@@ -25,10 +25,16 @@ export const useTimelineStatus = (fetchTimeline: () => void) => {
     // SSE 연결 설정
     const eventSource = new EventSource("/v1/daily/timeline/sse");
 
+    eventSource.onopen = () => {
+      console.log("SSE 연결 성공: /v1/daily/timeline/sse");
+    };
+
     eventSource.onmessage = (event) => {
       try {
-        const { phase } = JSON.parse(event.data);
-        console.log(phase);
+        console.log("event", event);
+        const data = JSON.parse(event.data);
+        console.log("SSE Received Data:", data);
+        const { phase } = data;
         if (phase === SERVER_EVENT.COLLECTING) {
           setUiStatus(UI_STATE.COLLECTING);
 
