@@ -36,6 +36,7 @@ export const useTimeline = () => {
     setFilter((prev) => ({ ...prev, mediaName }));
   };
 
+  //새로고침
   const refresh = () => {
     setFilter((prev) => ({ ...prev }));
   };

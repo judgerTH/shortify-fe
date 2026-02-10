@@ -25,36 +25,34 @@ export const useTimelineStatus = (fetchTimeline: () => void) => {
     // SSE 연결 설정
     const eventSource = new EventSource("/v1/daily/timeline/sse");
 
-    eventSource.onopen = () => {
-      console.log("SSE 연결 성공: /v1/daily/timeline/sse");
-    };
-
-    eventSource.onmessage = (event) => {
+    // 'phase' 이벤트 리스닝 (유저 요청 형식 적용)
+    eventSource.addEventListener("phase", (e: any) => {
       try {
-        console.log("event", event);
-        const data = JSON.parse(event.data);
-        console.log("SSE Received Data:", data);
-        const { phase } = data;
+        const data = JSON.parse(e.data);
+        const phase = data.phase;
+        console.log("현재 상태:", phase);
+
         if (phase === SERVER_EVENT.COLLECTING) {
           setUiStatus(UI_STATE.COLLECTING);
-
-          // 타이머가 돌고 있었다면 제거
+          // 요약 시작 시 기존 타이머 제거
           if (timerRef.current) clearTimeout(timerRef.current);
         } else if (phase === SERVER_EVENT.DEPLOYED) {
           setUiStatus(UI_STATE.DEPLOYED);
+
+          // 실시간 데이터 동기화
           fetchTimeline();
 
-          // [규칙] 10분(600,000ms) 후 다시 수집중으로 변경하는 타이머 설정
-          if (timerRef.current) clearTimeout(timerRef.current); // 이전 타이머 초기화
+          // [규칙] 10분 후 자동으로 '수집중' 상태로 복귀
+          if (timerRef.current) clearTimeout(timerRef.current);
           timerRef.current = setTimeout(() => {
             setUiStatus(UI_STATE.IDLE);
             console.log("10분이 경과하여 '수집중' 상태로 복귀합니다.");
           }, 10 * 60 * 1000);
         }
-      } catch (e) {
-        console.error("Failed to parse SSE message", e);
+      } catch (error) {
+        console.error("데이터 파싱 에러:", error);
       }
-    };
+    });
 
     eventSource.onerror = (error) => {
       console.error("SSE 연결 오류:", error);
@@ -63,6 +61,7 @@ export const useTimelineStatus = (fetchTimeline: () => void) => {
 
     // 컴포넌트 언마운트 시 정리
     return () => {
+      console.log("SSE 연결 종료");
       eventSource.close();
       if (timerRef.current) clearTimeout(timerRef.current);
     };
