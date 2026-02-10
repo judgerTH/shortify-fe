@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { fetchTimelineByFilter } from "../services/timelineService";
 import type { TimelineFilter, TimeFilterType } from "../types/filter";
 import type { DailyTimelineRes } from "../api/domain/daily/dto/res/DailyTimelineRes";
@@ -36,10 +36,10 @@ export const useTimeline = () => {
     setFilter((prev) => ({ ...prev, mediaName }));
   };
 
-  //새로고침
-  const refresh = () => {
+  // 새로고침 함수 메모이제이션하여 불필요한 useEffect 실행 방지
+  const refresh = useCallback(() => {
     setFilter((prev) => ({ ...prev }));
-  };
+  }, []);
 
   return {
     timelineData: data,

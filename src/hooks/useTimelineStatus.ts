@@ -54,14 +54,18 @@ export const useTimelineStatus = (fetchTimeline: () => void) => {
       }
     });
 
-    eventSource.onerror = (error) => {
-      console.error("SSE 연결 오류:", error);
-      eventSource.close();
+    eventSource.onopen = () => {
+      console.log("✅ SSE 연결 성공: /v1/daily/timeline/sse");
     };
 
-    // 컴포넌트 언마운트 시 정리
+    eventSource.onerror = (error) => {
+      console.error("SSE 연결 일시 오류 (재연결 시도 중...):", error);
+      // eventSource.close(); // 자동 재연결을 위해 닫지 않음
+    };
+
+    // 컴포넌트 언마운트 시에만 정리
     return () => {
-      console.log("SSE 연결 종료");
+      console.log("SSE 연결 종료 (Cleanup)");
       eventSource.close();
       if (timerRef.current) clearTimeout(timerRef.current);
     };
