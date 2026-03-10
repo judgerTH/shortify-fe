@@ -1,6 +1,7 @@
 import { CommonAPI } from "../../common/CommonAPI";
 import type { API_RESPONSE } from "../../common/API_RESPONSE";
 import type { DailyTimelineRes } from "./dto/res/DailyTimelineRes";
+import type { NewsInsightRes } from "./dto/res/NewsInsightRes";
 import type { TimelineRangePressReq } from "./dto/req/TimelineRangeReq";
 import type { TimelineRangeReq } from "./dto/req/TimelineRangeReq";
 
@@ -48,6 +49,13 @@ class DailyAPI extends CommonAPI {
     return this.get<DailyTimelineRes>("/timeline/range/press", {
       params: req,
     });
+  }
+
+  /**
+   * 오늘의 뉴스 분석 인사이트 조회
+   */
+  getNewsInsight(): Promise<API_RESPONSE<NewsInsightRes>> {
+    return this.get<NewsInsightRes>("/newsInsght/");
   }
 }
 

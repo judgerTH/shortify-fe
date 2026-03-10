@@ -9,6 +9,7 @@ import { MOCK_MOOD_DATA } from "./mocks/mood";
 function App() {
   const { 
     timelineData, 
+    newsInsight,
     isLoading, 
     onTimeFilterChange, 
     onMediaFilterChange,
@@ -16,6 +17,17 @@ function App() {
   } = useTimeline();
 
   const uiStatus = useTimelineStatus(refresh);
+
+  // API 데이터를 MoodCard 형식으로 변환
+  const moodData = newsInsight ? {
+    date: newsInsight.createdAt.split('T')[0],
+    summary: newsInsight.summary,
+    scores: [
+      { label: "긴장도", value: newsInsight.tension, delta: newsInsight.tensionDiff },
+      { label: "긍정도", value: newsInsight.positivity, delta: newsInsight.positivityDiff },
+      { label: "안정도", value: newsInsight.stability, delta: newsInsight.stabilityDiff },
+    ]
+  } : MOCK_MOOD_DATA;
 
   return (
     <Layout 
@@ -27,7 +39,7 @@ function App() {
         />
       }
     >
-      <MoodCard data={MOCK_MOOD_DATA} />
+      <MoodCard data={moodData as any} />
       <TimelineList data={timelineData} isLoading={isLoading} />
     </Layout>
   );

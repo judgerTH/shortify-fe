@@ -1,5 +1,6 @@
 import { DailyTimelineAPI } from "../api/domain/daily/API";
 import type { DailyTimelineRes } from "../api/domain/daily/dto/res/DailyTimelineRes";
+import type { NewsInsightRes } from "../api/domain/daily/dto/res/NewsInsightRes";
 import type { TimelineFilter } from "../types/filter";
 import { getTimeRange, getTodayRange } from "../utils/time";
 
@@ -76,6 +77,23 @@ export async function fetchTimelineByFilter(
     return res.data ?? null;
   } catch (error) {
     console.error("타임라인 조회 중 오류:", error);
+    return null;
+  }
+}
+
+/**
+ * 오늘의 뉴스 분석 인사이트 조회
+ */
+export async function fetchNewsInsight(): Promise<NewsInsightRes | null> {
+  try {
+    const res = await DailyTimelineAPI.getNewsInsight();
+    if (!res.result) {
+      console.error("인사이트 조회 실패:", res.reason);
+      return null;
+    }
+    return res.data ?? null;
+  } catch (error) {
+    console.error("인사이트 조회 중 오류:", error);
     return null;
   }
 }
